@@ -2,23 +2,41 @@
     <head>
         <meta charset="UTF-8">
         <script src="https://unpkg.com/vue@next"></script>
+
+        <style type="text/css">
+            .v-enter-from {
+                opacity: 0;
+                background-color: #FFCCCC;
+            }
+
+            .v-enter-to {
+                opacity: 0.5;
+                background-color: black;
+            }
+
+            .v-enter-active {
+                transition: opacity 2s, background-color 2s;
+            }
+        </style>
     </head>
 
     <body>
         <div id="app"></div>
     </body>
 
-    <script>
-        var app = Vue.createApp({template: "<counter />"});
-
-        app.component("counter", {
-            template: "The counter is: {{count}}",
+    <script type="module">
+        var app = Vue.createApp({
             data() {
-                return {count: 0}
-            }
-        })
+                return {show: false}
+            },
+            template: `
+                <button @click="show = !show">Toggle</button>
+                <transition>
+                    <p v-if="show">Hello</p>
+                </transition>
+            `
+        });
 
-        // Mount the Vue.js application on the <div> having the id "app"
         var vm = app.mount("div#app");
     </script>
 </html>
