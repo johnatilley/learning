@@ -4,19 +4,54 @@
         <script src="https://unpkg.com/vue@next"></script>
 
         <style type="text/css">
-            .v-enter-from {
+            .fade-enter-from {
                 opacity: 0;
                 background-color: #FFCCCC;
             }
 
-            .v-enter-to {
+            .fade-enter-to {
                 opacity: 0.5;
                 background-color: black;
             }
 
-            .v-enter-active {
+            .fade-enter-active {
                 transition: opacity 2s, background-color 2s;
             }
+
+            .fade-leave-from {
+                opacity: 1;
+                background-color: #FFCCCC;
+            }
+
+            .fade-leave-to {
+                opacity: 0;
+                background-color: black;
+            }
+
+            .fade-leave-active {
+                transition: opacity 2s, background-color 2s;
+            }
+
+            .shrink-leave-from {}
+            .shrink-leave-to {font-size: 0;}
+            .shrink-leave-active {transition: all 2s;}
+            .shrink-enter-from {font-size: 0;}
+            .shrink-enter-to {}
+            .shrink-enter-active {transition: all 2s;}
+
+            .ymove-leave-from {}
+            .ymove-leave-to {
+                transform: translateY(100px);
+                opacity: 0;
+            }
+            .ymove-leave-active {transition: all 2s;}
+            .ymove-enter-from {
+                transform: translateY(100px);
+                opacity: 0;
+            }
+            .ymove-enter-to {}
+            .ymove-enter-active {transition: all 2s;}
+
         </style>
     </head>
 
@@ -31,9 +66,11 @@
             },
             template: `
                 <button @click="show = !show">Toggle</button>
-                <transition>
+                <transition-group name="ymove">
                     <p v-if="show">Hello</p>
-                </transition>
+                    <p v-if="show">Hello</p>
+                    <p v-if="show">Hello</p>
+                </transition-group>
             `
         });
 
