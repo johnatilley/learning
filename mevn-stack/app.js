@@ -7,9 +7,12 @@ var logger = require( 'morgan' );
 var indexRouter = require( './routes/index' );
 var usersRouter = require( './routes/users' );
 
+require('dotenv').config();
+
+var mongoUrl = process.env.MONGO_URL;
 var mongoose = require( "mongoose" );
 mongoose.set( 'strictQuery', true );
-mongoose.connect( "mongodb://172.21.18.247:27017/mydb_test" );
+mongoose.connect( "mongodb://" + mongoUrl + "/mydb_test" );
 
 var listSchema = mongoose.Schema( {
   text: String
