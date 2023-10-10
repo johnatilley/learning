@@ -2,13 +2,14 @@
   <head>
     <meta charset="utf-8" />
     <script src="https://unpkg.com/vue@next"></script>
-    
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
     <style type="text/css">
       li {
-        margin-top:10px;
+        margin-top: 10px;
       }
       ul button {
-        margin-left:10px;
+        margin-left: 10px;
       }
     </style>
   </head>
@@ -16,20 +17,21 @@
   <body>
     <div id="app"></div>
   </body>
-  
+
   <script type="module">
-  
+
+    console.log("axios.VERSION = " + axios.VERSION);
+
     import GlobalApp from "./global-app.js";
-    
+
     var app = Vue.createApp({
-      components : {
-        GlobalApp:GlobalApp
+      components: {
+        GlobalApp: GlobalApp
       },
-      template : "<GlobalApp />"
+      template: "<GlobalApp />"
     });
-    
+
     var vm = app.mount("div#app");
-    
   </script>
-  
+
 </html>
