@@ -1,4 +1,0 @@
-This is the content
-of the file file1.txt
-located in
-the current directory.

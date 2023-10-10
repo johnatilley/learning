@@ -1,19 +1,25 @@
-var http = require( "http" );
+var mongoose = require( "mongoose" );
+mongoose.set( 'strictQuery', true );
+mongoose.connect( "mongodb://172.21.18.247:27017/mydb_test" );
 
-var server = http.createServer( function ( req, res ) {
-    // Display the received request in the console
-    console.log( "Request received:", req.url );
-    // indicate that the response is HTML in utf-8
-    res.setHeader( "Content-type", "text/html; charset==utf-8" );
+console.log( "mongoose version", mongoose.version );
 
-    res.write( "<h1>" );
-    res.write( "Hello, world!" );
-    res.write( "</h1>" );
-    res.end();
+var clientSchema = mongoose.Schema( {
+    lastname: String,
+    firstname: String,
+    address: String
 } );
 
-server.listen( 3000 );
+var Client = mongoose.model( "clients", clientSchema );
 
-console.log( "\nThe server was started on port 3000\n" );
-console.log( "You can make a request on:" );
-console.log( "http://localhost:3000" );
+Client.deleteOne( { $and: [ { lastname: "Clinton" }, { address: "New York" } ] } )
+    .exec()
+    .then( ( res ) => {
+        console.log( res );
+        Client.find()
+            .exec()
+            .then( ( clients ) => console.log( clients ) );
+    } )
+    .catch( ( err ) => console.log( err ) );
+
+console.log( "After the statement" );

@@ -1,0 +1,84 @@
+version: '3.8'
+
+services:
+    node:
+        container_name: mevn_node
+        platform: ${DOCKER_PLATFORM:-linux/amd64}
+        image: "node:18"
+        user: "node"
+        working_dir: /home/node/app
+        volumes:
+            - ./:/home/node/app
+        environment:
+            - NODE_ENV=development
+        ports:
+            - '${FORWARD_NODE_PORT:-8080}:8080'
+        networks:
+            - mevn_network
+        depends_on:
+            - postgres
+        command: "npm run start"
+    bun:
+        container_name: mevn_bun
+        platform: ${DOCKER_PLATFORM:-linux/amd64}
+        image: "oven/bun:1.0"
+        user: "bun"
+        working_dir: /home/bun/app
+        volumes:
+            - ./:/home/bun/app
+        ports:
+            - '${FORWARD_BUN_PORT:-8000}:8080'
+        networks:
+            - mevn_network
+        depends_on:
+            - postgres
+        command: "bun run bun-start"
+    postgres:
+        container_name: mevn_postgres
+        platform: ${DOCKER_PLATFORM:-linux/amd64}
+        image: postgres:15
+        environment:
+            POSTGRES_DB: ${PG_DATABASE}
+            POSTGRES_USER: ${PG_USERNAME}
+            POSTGRES_PASSWORD: ${PG_PASSWORD}
+        ports:
+            - '${FORWARD_POSTGRES_PORT:-5432}:5432'
+        volumes:
+            - ./data/postgres:/var/lib/postgresql/data
+        networks:
+            - mevn_network
+    pgadmin4:
+        container_name: mevn_pgadmin4
+        platform: ${DOCKER_PLATFORM:-linux/amd64}
+        image: dpage/pgadmin4:7
+        environment:
+            PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL}
+            PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD}
+        ports:
+            - '${FORWARD_PGADMIN_PORT:-4080}:80'
+        volumes:
+            - ./data/pgadmin:/var/lib/pgadmin
+        networks:
+            - mevn_network
+    mongo:
+        container_name: mevn_mongo
+        platform: ${DOCKER_PLATFORM:-linux/amd64}
+        image: mongo
+        environment:
+            MONGO_INITDB_ROOT_USERNAME: root
+            MONGO_INITDB_ROOT_PASSWORD: example
+        volumes:
+            - ./data/mongo:/data/db
+    mongo-express:
+        container_name: mevn_mongo_express
+        platform: ${DOCKER_PLATFORM:-linux/amd64}
+        image: mongo-express
+        ports:
+            - 8081:8081
+        environment:
+            ME_CONFIG_MONGODB_ADMINUSERNAME: root
+            ME_CONFIG_MONGODB_ADMINPASSWORD: example
+            ME_CONFIG_MONGODB_URL: mongodb://root:example@mongo:27017/
+networks:
+    mevn_network:
+        driver: bridge
